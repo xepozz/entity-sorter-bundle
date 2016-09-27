@@ -100,11 +100,14 @@ To move your items up or down in the sort order use the entity functions ```move
 // AppBundle/Controller/testController.php
 
 // ...
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 // ...
 
 class testController extends Controller
 {
+    
     // ...
     
     public function moveUpAction($id)
@@ -116,14 +119,14 @@ class testController extends Controller
         // ...
     }
     
-        public function moveDownAction($id)
-        {
-            // ...
-            
-            $testEntity->moveDown($this);
-    
-            // ...
-        }
+    public function moveDownAction($id)
+    {
+        // ...
+        
+        $testEntity->moveDown($this);
+
+        // ...
+    }
 
     // ...
 }
