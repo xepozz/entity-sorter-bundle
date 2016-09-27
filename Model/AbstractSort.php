@@ -32,8 +32,8 @@ abstract class AbstractSort
     /**
      * @param Controller $controller
      */
-    public function sortUp(Controller &$controller) {
-        simpleSorter::sortUp(
+    public function moveUp(Controller &$controller) {
+        simpleSorter::moveUp(
             $controller,
             $this
         );
@@ -42,8 +42,8 @@ abstract class AbstractSort
     /**
      * @param Controller $controller
      */
-    public function sortDown(Controller &$controller) {
-        simpleSorter::sortDown(
+    public function moveDown(Controller &$controller) {
+        simpleSorter::moveDown(
             $controller,
             $this
         );

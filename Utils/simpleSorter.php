@@ -16,8 +16,8 @@ class simpleSorter
      * @param AbstractSort $objectOne
      * @return bool
      */
-    public static function sortUp(Controller &$controller, AbstractSort $objectOne) {
-        return self::sort($controller, $objectOne, self::UP);
+    public static function moveUp(Controller &$controller, AbstractSort $objectOne) {
+        return self::move($controller, $objectOne, self::UP);
     }
 
     /**
@@ -25,8 +25,8 @@ class simpleSorter
      * @param AbstractSort $objectOne
      * @return bool
      */
-    public static function sortDown(Controller &$controller, AbstractSort $objectOne) {
-        return self::sort($controller, $objectOne, self::DOWN);
+    public static function moveDown(Controller &$controller, AbstractSort $objectOne) {
+        return self::move($controller, $objectOne, self::DOWN);
     }
 
     /**
@@ -35,7 +35,7 @@ class simpleSorter
      * @param int $order
      * @return bool
      */
-    private static function sort(Controller &$controller, AbstractSort $objectOne, $order) {
+    private static function move(Controller &$controller, AbstractSort $objectOne, $order) {
         $fullClassName = get_class($objectOne);
         $objectOneId = $objectOne->getId();
 

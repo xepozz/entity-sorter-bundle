@@ -5,7 +5,6 @@
   "type": "symfony-bundle",
   "homepage": "https://github.com/daniellehrner/sorterbundle",
   "license": "MIT",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Daniel Lehrner",
