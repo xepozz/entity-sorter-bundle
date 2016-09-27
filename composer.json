@@ -1,0 +1,30 @@
+{
+  "name": "Ip/sorter-bundle",
+  "description": "Adds sorting functionality to your entities",
+  "keywords": ["sort","symfony2"],
+  "type": "symfony-bundle",
+  "homepage": "https://github.com/daniellehrner/sorterbundle",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Daniel Lehrner",
+      "email": "dl@inter-punkt.ch"
+    },
+    {
+      "name": "Symfony Community",
+      "homepage": "https://github.com/daniellehrner/sorterbundle"
+    }
+  ],
+  "archive": {
+    "exclude": ["/Tests"]
+  },
+  "require": {
+    "php":                                 ">=5.4",
+    "symfony/framework-bundle":            "~2.4|~3.0",
+    "doctrine/orm":                        ">=2.4"
+  },
+  "autoload": {
+    "psr-4": { "Ip\\SorterBundle\\": "" }
+  }
+}
