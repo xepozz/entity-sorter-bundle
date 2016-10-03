@@ -14,7 +14,14 @@ class SortListener
     public function prePersist(AbstractSort $item, LifecycleEventArgs $event)
     {
         $maxSortRank = $this->getMaxSort($event, $item->hasSuperCategory());
-        $item->setSort($maxSortRank + 1);
+
+        if ($item->isNewItemOnTop()) {
+            $item->setSort(1);
+            $this->moveAllItemsUp($event);
+        }
+        else {
+            $item->setSort($maxSortRank + 1);
+        }
     }
 
     /**
@@ -79,5 +86,20 @@ class SortListener
 
             $em->persist($item);
         }
+    }
+
+    /**
+     * @param LifecycleEventArgs $event
+     */
+    private function moveAllItemsUp($event) {
+        $em = $event->getEntityManager();
+        $entityClass = get_class($event->getEntity());
+
+        foreach ($em->getRepository($entityClass) as $item) {
+            $item->setSort($item->getSort() + 1);
+            $em->persist($item);
+        }
+
+        $em->flush();
     }
 }

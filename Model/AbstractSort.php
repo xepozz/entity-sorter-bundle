@@ -30,6 +30,13 @@ abstract class AbstractSort
     }
 
     /**
+     * @return bool
+     */
+    public function isNewItemOnTop() {
+        return false;
+    }
+
+    /**
      * @param Controller $controller
      */
     public function moveUp(Controller &$controller) {
