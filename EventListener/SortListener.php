@@ -80,10 +80,19 @@ class SortListener
         $itemsWithHigherSortNumber = $query->getResult();
 
         foreach ($itemsWithHigherSortNumber as $item) {
-            $sort = $item->getSort();
-            $item->setSort($sort - 1);
+            $newSort = $item->getSort() - 1;
 
-            $em->persist($item);
+            /*
+             * DQL is used here to avoid maximum function nesting error in XDebug
+            */
+            $updateQuery = $em->createQuery(
+                "UPDATE $entityClass i 
+                 SET i.sort = :sort
+                 WHERE i.id = :id"
+            )->setParameter('sort', $newSort)
+             ->setParameter('id', $item->getId());
+
+            $updateQuery->execute();
         }
     }
 
