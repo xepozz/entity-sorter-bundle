@@ -28,14 +28,12 @@ Then extend your Entity with AbstractSort. Afterwards you have to implement the 
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\EntityListeners;
 use Ip\SorterBundle\Model\AbstractSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="test")
- * @Entity @EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
+ * @ORM\EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
  */
 class Test extends AbstractSort
 {
