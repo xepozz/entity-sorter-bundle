@@ -88,21 +88,4 @@ class SortListener
             $updateQuery->execute();
         }
     }
-
-    /**
-     * @param LifecycleEventArgs $event
-     */
-    private function moveAllItemsUp($event) {
-        $em = $event->getEntityManager();
-        $entityClass = get_class($event->getEntity());
-
-        $items = $em->getRepository($entityClass)->findAll();
-
-        foreach ($items as $item) {
-            $item->setSort($item->getSort() + 1);
-            $em->persist($item);
-        }
-
-        $em->flush();
-    }
 }
