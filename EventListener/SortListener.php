@@ -13,14 +13,8 @@ class SortListener
      */
     public function prePersist(AbstractSort $item, LifecycleEventArgs $event)
     {
-        if ($item->isNewItemOnTop()) {
-            $item->setSort(1);
-            $this->moveAllItemsUp($event);
-        }
-        else {
-            $maxSortRank = $this->getMaxSort($event, $item->hasSuperCategory());
-            $item->setSort($maxSortRank + 1);
-        }
+        $maxSortRank = $this->getMaxSort($event, $item->hasSuperCategory());
+        $item->setSort($maxSortRank + 1);
     }
 
     /**
