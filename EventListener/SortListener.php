@@ -13,7 +13,7 @@ class SortListener
      */
     public function prePersist(AbstractSort $item, LifecycleEventArgs $event)
     {
-        $maxSortRank = $this->getMaxSort($event, $item->hasSuperCategory());
+        $maxSortRank = $this->getMaxSort($event, $item);
         $item->setSort($maxSortRank + 1);
     }
 
@@ -28,17 +28,17 @@ class SortListener
 
     /**
      * @param LifecycleEventArgs $event
-     * @param string $superCategory
+     * @param AbstractSort $item
      * @return int
      */
-    private function getMaxSort(LifecycleEventArgs &$event, $superCategory)
+    private function getMaxSort(LifecycleEventArgs &$event, $item)
     {
         $em = $event->getEntityManager();
-        $entityClass = get_class($event->getEntity());
+        $entityClass = get_class($item);
 
         $itemArray = $em->getRepository($entityClass)
             ->findBy(
-                $superCategory,
+                $item->hasSuperCategory(),
                 ["sort" => "DESC"],
                 1
             );

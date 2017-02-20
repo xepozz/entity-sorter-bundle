@@ -7,6 +7,7 @@ use Ip\SorterBundle\Model\AbstractSort;
 class AbstractSortMock extends AbstractSort
 {
     public $sort;
+    public $superCategories = array();
 
     /**
      * @return integer
@@ -30,5 +31,12 @@ class AbstractSortMock extends AbstractSort
     public function setSort($sort)
     {
         $this->sort = $sort;
+    }
+
+    /**
+     * @return array
+     */
+    public function hasSuperCategory() {
+        return $this->superCategories;
     }
 }
