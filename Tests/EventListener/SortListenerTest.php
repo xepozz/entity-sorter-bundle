@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Ip\SorterBundle\EventListener\SortListener;
-use Ip\SorterBundle\Model\AbstractSort;
 use Ip\SorterBundle\Tests\Mock\AbstractSortMock;
 use PHPUnit\Framework\TestCase;
 
@@ -34,9 +33,9 @@ class SortListenerTest extends TestCase
             ->willReturn($this->repo);
 
         $this->event = $this
-                ->getMockBuilder(LifecycleEventArgs::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+            ->getMockBuilder(LifecycleEventArgs::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->event->method('getEntityManager')
             ->will($this->returnValue($this->em));

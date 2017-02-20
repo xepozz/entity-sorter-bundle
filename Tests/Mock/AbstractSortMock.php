@@ -36,7 +36,8 @@ class AbstractSortMock extends AbstractSort
     /**
      * @return array
      */
-    public function hasSuperCategory() {
+    public function hasSuperCategory() 
+    {
         return $this->superCategories;
     }
 }

@@ -8,7 +8,7 @@ use Ip\SorterBundle\Model\AbstractSort;
 class SortListener
 {
     /**
-     * @param AbstractSort $item
+     * @param AbstractSort       $item
      * @param LifecycleEventArgs $event
      */
     public function prePersist(AbstractSort $item, LifecycleEventArgs $event)
@@ -18,7 +18,7 @@ class SortListener
     }
 
     /**
-     * @param AbstractSort $item
+     * @param AbstractSort       $item
      * @param LifecycleEventArgs $event
      */
     public function preRemove(AbstractSort $item, LifecycleEventArgs $event)
@@ -28,7 +28,7 @@ class SortListener
 
     /**
      * @param LifecycleEventArgs $event
-     * @param AbstractSort $item
+     * @param AbstractSort       $item
      * @return int
      */
     private function getMaxSort(LifecycleEventArgs &$event, $item)
@@ -47,11 +47,13 @@ class SortListener
 
     /**
      * @param LifecycleEventArgs $event
-     * @param AbstractSort $item
+     * @param AbstractSort       $item
+     *
+     * Every item, with a higher sort value than the deleted item,
+     * has the sort value reduced by 1 to avoid gaps
      */
-    // Every item, with a higher sort value than the deleted item,
-    // has the sort value reduced by 1 to avoid gaps
-    private function updateItemsWithHigherSortNumber(LifecycleEventArgs &$event, AbstractSort &$item) {
+    private function updateItemsWithHigherSortNumber(LifecycleEventArgs &$event, AbstractSort &$item) 
+    {
         $em = $event->getEntityManager();
         $entityClass = get_class($event->getEntity());
 
@@ -83,7 +85,7 @@ class SortListener
                  SET i.sort = :sort
                  WHERE i.id = :id"
             )->setParameter('sort', $newSort)
-             ->setParameter('id', $item->getId());
+                ->setParameter('id', $item->getId());
 
             $updateQuery->execute();
         }

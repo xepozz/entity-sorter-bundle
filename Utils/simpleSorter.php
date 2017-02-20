@@ -12,30 +12,33 @@ class simpleSorter
     const DOWN = 1;
 
     /**
-     * @param Controller $controller
+     * @param Controller   $controller
      * @param AbstractSort $objectOne
      * @return bool
      */
-    public static function moveUp(Controller &$controller, AbstractSort $objectOne) {
+    public static function moveUp(Controller &$controller, AbstractSort $objectOne) 
+    {
         return self::move($controller, $objectOne, self::UP);
     }
 
     /**
-     * @param Controller $controller
+     * @param Controller   $controller
      * @param AbstractSort $objectOne
      * @return bool
      */
-    public static function moveDown(Controller &$controller, AbstractSort $objectOne) {
+    public static function moveDown(Controller &$controller, AbstractSort $objectOne) 
+    {
         return self::move($controller, $objectOne, self::DOWN);
     }
 
     /**
-     * @param Controller $controller
+     * @param Controller   $controller
      * @param AbstractSort $objectOne
-     * @param int $order
+     * @param int          $order
      * @return bool
      */
-    private static function move(Controller &$controller, AbstractSort $objectOne, $order) {
+    private static function move(Controller &$controller, AbstractSort $objectOne, $order) 
+    {
         $fullClassName = get_class($objectOne);
         $objectOneId = $objectOne->getId();
 
@@ -59,8 +62,7 @@ class simpleSorter
         $objectTwo = $em->getRepository($fullClassName)
             ->findOneBy(
                 $conditionArray
-            )
-        ;
+            );
 
         if (is_null($objectTwo)) {
             return false;
