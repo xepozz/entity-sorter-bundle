@@ -44,12 +44,10 @@ class SortListenerTest extends TestCase
 
     public function testPrePersistWithEmptyRepository()
     {
-        $itemArray = array();
-
         $this->repo
             ->expects($this->once())
-            ->method('findBy')
-            ->willReturn($itemArray);
+            ->method('findOneBy')
+            ->willReturn(null);
 
         $abstractSort = new AbstractSortMock();
         $abstractSort->setSort(0);
@@ -64,12 +62,11 @@ class SortListenerTest extends TestCase
     {
         $firstElement = new AbstractSortMock();
         $firstElement->setSort(1);
-        $itemArray = array($firstElement);
 
         $this->repo
             ->expects($this->once())
-            ->method('findBy')
-            ->willReturn($itemArray);
+            ->method('findOneBy')
+            ->willReturn($firstElement);
 
         $abstractSort = new AbstractSortMock();
         $abstractSort->setSort(0);

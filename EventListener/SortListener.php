@@ -36,14 +36,13 @@ class SortListener
         $em = $event->getEntityManager();
         $entityClass = get_class($item);
 
-        $itemArray = $em->getRepository($entityClass)
-            ->findBy(
+        $otherItem = $em->getRepository($entityClass)
+            ->findOneBy(
                 $item->hasSuperCategory(),
-                ["sort" => "DESC"],
-                1
+                ["sort" => "DESC"]
             );
 
-        return (empty($itemArray) || !array_key_exists(0, $itemArray)) ? 0 : $itemArray[0]->getSort();
+        return (is_null($otherItem)) ? 0 : $otherItem->getSort();
     }
 
     /**
