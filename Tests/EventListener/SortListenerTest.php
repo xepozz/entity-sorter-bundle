@@ -5,6 +5,7 @@ namespace Ip\SorterBundle\Tests\EventListener;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Ip\SorterBundle\EventListener\SortListener;
 use Ip\SorterBundle\Tests\Mock\AbstractSortMock;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +15,7 @@ class SortListenerTest extends TestCase
     private $repo;
     private $em;
     private $event;
+    private $updateEvent;
 
     protected function setUp()
     {
@@ -38,6 +40,14 @@ class SortListenerTest extends TestCase
             ->getMock();
 
         $this->event->method('getEntityManager')
+            ->will($this->returnValue($this->em));
+
+        $this->updateEvent = $this
+            ->getMockBuilder(PreUpdateEventArgs::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->updateEvent->method('getEntityManager')
             ->will($this->returnValue($this->em));
     }
 
@@ -75,4 +85,29 @@ class SortListenerTest extends TestCase
 
         $this->assertEquals(2, $abstractSort->getSort(), 'Inserting into a non empty repository, should set sort to max sort + 1');
     }
+
+//    public function testPreUpdateWithNonEmptyRepository()
+//    {
+//        $firstElement = new AbstractSortMock();
+//        $firstElement->setSort(1);
+//
+//        $this->repo
+//            ->expects($this->once())
+//            ->method('findOneBy')
+//            ->willReturn($firstElement);
+//
+//        $this->updateEvent
+//            ->expects($this->once())
+//            ->method('hasChangedField')
+//            ->willReturn(true);
+//
+//
+//        $abstractSort = new AbstractSortMock();
+//        $abstractSort->setSort(0);
+//
+//        $listener = new SortListener();
+//        $listener->prePersist($abstractSort, $this->event);
+//
+//        $this->assertEquals(2, $abstractSort->getSort(), 'Inserting into a non empty repository, should set sort to max sort + 1');
+//    }
 }

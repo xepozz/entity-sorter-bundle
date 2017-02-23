@@ -3,6 +3,7 @@
 namespace Ip\SorterBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Ip\SorterBundle\Model\AbstractSort;
 
 class SortListener
@@ -18,6 +19,25 @@ class SortListener
     }
 
     /**
+     * @param AbstractSort $item
+     * @param PreUpdateEventArgs $args
+     */
+    public function preUpdate(AbstractSort $item, PreUpdateEventArgs $args)
+    {
+        foreach ($item->hasSuperCategory() as $superCategoryName => $superCategoryItem) {
+            if ($args->hasChangedField($superCategoryName)) {
+                // update sort values of old superCategory
+                $oldValue = $args->getOldValue($superCategoryName);
+                $this->updateItemsWithHigherSortNumber($args, $item, [$superCategoryName => $oldValue->getId()]);
+
+                // set max sort of new superCategory
+                $maxSortRank = $this->getMaxSort($args, $item);
+                $item->setSort($maxSortRank + 1);
+            }
+        }
+    }
+
+    /**
      * @param AbstractSort       $item
      * @param LifecycleEventArgs $event
      */
@@ -27,11 +47,11 @@ class SortListener
     }
 
     /**
-     * @param LifecycleEventArgs $event
+     * @param LifecycleEventArgs | PreUpdateEventArgs  $event
      * @param AbstractSort       $item
      * @return int
      */
-    private function getMaxSort(LifecycleEventArgs &$event, $item)
+    private function getMaxSort(&$event, $item)
     {
         $em = $event->getEntityManager();
         $entityClass = get_class($item);
@@ -46,13 +66,14 @@ class SortListener
     }
 
     /**
-     * @param LifecycleEventArgs $event
-     * @param AbstractSort       $item
+     * @param LifecycleEventArgs | PreUpdateEventArgs $event
+     * @param AbstractSort $item
+     * @param array $replacement
      *
      * Every item, with a higher sort value than the deleted item,
      * has the sort value reduced by 1 to avoid gaps
      */
-    private function updateItemsWithHigherSortNumber(LifecycleEventArgs &$event, AbstractSort &$item) 
+    private function updateItemsWithHigherSortNumber(&$event, AbstractSort &$item, $replacement = array())
     {
         $em = $event->getEntityManager();
         $entityClass = get_class($event->getEntity());
@@ -62,7 +83,13 @@ class SortListener
         $superCategoryCondition = '';
 
         foreach ($item->hasSuperCategory() as $key => $value) {
-            $valueId = $value->getId();
+            if (array_key_exists($key, $replacement)) {
+                $valueId = $replacement[$key];
+            }
+            else {
+                $valueId = $value->getId();
+            }
+
             $superCategoryCondition .= "i.$key = $valueId AND ";
         }
 
