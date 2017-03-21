@@ -1,5 +1,5 @@
 {
-  "name": "ip/sorter-bundle",
+  "name": "daniellehrner/sorter-bundle",
   "description": "Adds sorting functionality to your entities",
   "keywords": ["sort","symfony2"],
   "type": "symfony-bundle",
