@@ -24,17 +24,45 @@ class SortListener
      */
     public function preUpdate(AbstractSort $item, PreUpdateEventArgs $args)
     {
+        $superCategoryHasChanged = false;
+        $newSuperCategoryValues = array();
+        $oldSuperCategoryValues = array();
+
         foreach ($item->hasSuperCategory() as $superCategoryName => $superCategoryItem) {
             if ($args->hasChangedField($superCategoryName)) {
-                // update sort values of old superCategory
-                $oldValue = $args->getOldValue($superCategoryName);
-                $this->updateItemsWithHigherSortNumber($args, $item, [$superCategoryName => $oldValue->getId()]);
+                $superCategoryHasChanged = true;
 
-                // set max sort of new superCategory
-                $maxSortRank = $this->getMaxSort($args, $item);
-                $item->setSort($maxSortRank + 1);
+                $newSuperCategoryObject = $args->getNewValue($superCategoryName);
+                $oldSuperCategoryObject = $args->getOldValue($superCategoryName);
+
+                if (!is_null($newSuperCategoryObject)) {
+                    $newSuperCategoryValues[$superCategoryName] = $newSuperCategoryObject->getId();
+                }
+
+                if (!is_null($oldSuperCategoryObject)) {
+                    $oldSuperCategoryValues[$superCategoryName] = $oldSuperCategoryObject->getId();
+                }
+            }
+            else {
+                if (!is_null($superCategoryItem)) {
+                    $newSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
+                    $oldSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
+                }
             }
         }
+
+        if (!$superCategoryHasChanged) {
+            return;
+        }
+
+        // correct sort order of the item from the old supercategories
+        $this->updateItemsWithHigherSortNumber($args, $item, $oldSuperCategoryValues);
+
+        // get highest sort value of the items from the new supercategories
+        $maxSortRank = $this->getMaxSort($args, $item, $newSuperCategoryValues);
+
+        // set the sort value to the new highest sort of the new supercategories
+        $item->setSort($maxSortRank + 1);
     }
 
     /**
@@ -47,18 +75,32 @@ class SortListener
     }
 
     /**
-     * @param LifecycleEventArgs | PreUpdateEventArgs  $event
-     * @param AbstractSort       $item
+     * @param LifecycleEventArgs | PreUpdateEventArgs $event
+     * @param AbstractSort $item
+     * @param array $replacement
      * @return int
      */
-    private function getMaxSort(&$event, $item)
+    private function getMaxSort(LifecycleEventArgs &$event, AbstractSort $item, array $replacement = array())
     {
         $em = $event->getEntityManager();
         $entityClass = get_class($item);
 
+        $superCategories = array();
+
+        foreach ($item->hasSuperCategory() as $key => $value) {
+            if (array_key_exists($key, $replacement)) {
+                $valueId = $replacement[$key];
+            }
+            else {
+                $valueId = $value->getId();
+            }
+
+            $superCategories[$key] = $valueId;
+        }
+
         $otherItem = $em->getRepository($entityClass)
             ->findOneBy(
-                $item->hasSuperCategory(),
+                $superCategories,
                 ["sort" => "DESC"]
             );
 
@@ -70,8 +112,8 @@ class SortListener
      * @param AbstractSort $item
      * @param array $replacement
      *
-     * Every item, with a higher sort value than the deleted item,
-     * has the sort value reduced by 1 to avoid gaps
+     * Every item, with a higher sort value than the moved / deleted item,
+     * has the sort value reduced by 1 to close the gap
      */
     private function updateItemsWithHigherSortNumber(&$event, AbstractSort &$item, $replacement = array())
     {
