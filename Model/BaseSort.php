@@ -1,33 +1,63 @@
 <?php
 
+
 namespace Ip\SorterBundle\Model;
-
-trigger_error('AbstractSort will be removed in the next major version, use BaseSort instead', E_USER_DEPRECATED);
-
+use Doctrine\ORM\Mapping\MappedSuperclass;
 use Ip\SorterBundle\Utils\simpleSorter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
- * Class AbstractSort
- * @package Ip\SorterBundle\Model
- * @deprecated
+ * @MappedSuperclass
  */
-abstract class AbstractSort
+class BaseSort
 {
     /**
-     * @return integer
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    abstract public function getId();
+    protected $id;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $sort;
 
     /**
      * @return integer
      */
-    abstract public function getSort();
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @param integer $id
+     * @return $this
+     */
+    public function setId($id) {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
 
     /**
      * @param integer $sort
+     * @return $this
      */
-    abstract public function setSort($sort);
+    public function setSort($sort) {
+        $this->sort = $sort;
+
+        return $this;
+    }
 
     /**
      * @return array
