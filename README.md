@@ -19,7 +19,7 @@ Step 2: Add it to an entity
 -------------------------
 
 Add the Doctrine entity listener to your entitiy and don't forget to include all the use statements.
-Then extend your Entity with AbstractSort. Afterwards you have to implement the functions ```getID()```, ```getSort()``` and ```setSort($sort)``` as shown as in the example below.
+Then extend your Entity with BaseSort as shown as in the example below.
 
 ```php
 <?php
@@ -28,65 +28,20 @@ Then extend your Entity with AbstractSort. Afterwards you have to implement the 
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Ip\SorterBundle\Model\AbstractSort;
+use Ip\SorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="test")
  * @ORM\EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
  */
-class Test extends AbstractSort
+class Test extends BaseSort
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-        
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $sort;
-
     // ...
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-    
-    /**
-     * Set sort
-     *
-     * @param integer $sort
-     * @return Test
-     */
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
-
-        return $this;
-    }
-
-    /**
-     * Get sort
-     *
-     * @return integer 
-     */
-    public function getSort()
-    {
-        return $this->sort;
-    }
 }
 ```
 
-After this changes the sort value is already being set automatically for new database entries and is also correctly modified when you delete entries.
+After this changes the sort value is already being set automatically for new database entries and is also correctly modified when you delete or update entries.
 
 Step 3: Move items up and down 
 -------------------------
@@ -133,7 +88,7 @@ class testController extends Controller
 (Optional) Step 4: Sorting within a supercategory
 -------------------------
 
-If your entity is a subcategory of another entity and should be sorted only within its own supercategeory, then you need to overwrite the function ```hasSuperCategory()``` in your entity.
+If your entity is a subcategory of another entity and should be sorted only within its own supercategory, you need to overwrite the function ```hasSuperCategory()``` in your entity.
 
 In the example below we have a product sub category that needs to be sorted within the product category.
 
@@ -144,16 +99,14 @@ In the example below we have a product sub category that needs to be sorted with
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\EntityListeners;
-use Ip\SorterBundle\Model\AbstractSort;
+use Ip\SorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="product_sub_category")
- * @Entity @EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
+ * @ORM\EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
  */
-class ProductSubCategory extends AbstractSort
+class ProductSubCategory extends BaseSort
 {
     // ...
     
@@ -175,7 +128,7 @@ class ProductSubCategory extends AbstractSort
 }
 ```
 
-If an entity has more than one super category, the array, which is returned in the ```hasSuperCategory()``` can just be extended:
+An entity can have several supercategories. The array returned in hasSuperCategory just has to contain the values from them. The order of the supercategories has no influence on the sorting:
 
 ```php
 return array(

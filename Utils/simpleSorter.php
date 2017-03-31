@@ -3,6 +3,7 @@
 namespace Ip\SorterBundle\Utils;
 
 use Ip\SorterBundle\Model\AbstractSort;
+use Ip\SorterBundle\Model\BaseSort;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 
@@ -13,31 +14,31 @@ class simpleSorter
 
     /**
      * @param Controller   $controller
-     * @param AbstractSort $objectOne
+     * @param BaseSort | AbstractSort $objectOne
      * @return bool
      */
-    public static function moveUp(Controller &$controller, AbstractSort $objectOne) 
+    public static function moveUp(Controller &$controller, $objectOne)
     {
         return self::move($controller, $objectOne, self::UP);
     }
 
     /**
      * @param Controller   $controller
-     * @param AbstractSort $objectOne
+     * @param BaseSort | AbstractSort $objectOne
      * @return bool
      */
-    public static function moveDown(Controller &$controller, AbstractSort $objectOne) 
+    public static function moveDown(Controller &$controller, $objectOne)
     {
         return self::move($controller, $objectOne, self::DOWN);
     }
 
     /**
      * @param Controller   $controller
-     * @param AbstractSort $objectOne
+     * @param BaseSort | AbstractSort $objectOne
      * @param int          $order
      * @return bool
      */
-    private static function move(Controller &$controller, AbstractSort $objectOne, $order) 
+    private static function move(Controller &$controller, $objectOne, $order)
     {
         $fullClassName = get_class($objectOne);
         $objectOneId = $objectOne->getId();

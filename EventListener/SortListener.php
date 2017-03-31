@@ -4,25 +4,24 @@ namespace Ip\SorterBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Ip\SorterBundle\Model\AbstractSort;
 
 class SortListener
 {
     /**
-     * @param AbstractSort       $item
+     * @param $item
      * @param LifecycleEventArgs $event
      */
-    public function prePersist(AbstractSort $item, LifecycleEventArgs $event)
+    public function prePersist($item, LifecycleEventArgs $event)
     {
         $maxSortRank = $this->getMaxSort($event, $item);
         $item->setSort($maxSortRank + 1);
     }
 
     /**
-     * @param AbstractSort $item
+     * @param $item
      * @param PreUpdateEventArgs $args
      */
-    public function preUpdate(AbstractSort $item, PreUpdateEventArgs $args)
+    public function preUpdate($item, PreUpdateEventArgs $args)
     {
         $superCategoryHasChanged = false;
         $newSuperCategoryValues = array();
@@ -66,21 +65,21 @@ class SortListener
     }
 
     /**
-     * @param AbstractSort       $item
+     * @param $item
      * @param LifecycleEventArgs $event
      */
-    public function preRemove(AbstractSort $item, LifecycleEventArgs $event)
+    public function preRemove($item, LifecycleEventArgs $event)
     {
         $this->updateItemsWithHigherSortNumber($event, $item);
     }
 
     /**
      * @param LifecycleEventArgs | PreUpdateEventArgs $event
-     * @param AbstractSort $item
+     * @param $item
      * @param array $replacement
      * @return int
      */
-    private function getMaxSort(LifecycleEventArgs &$event, AbstractSort $item, array $replacement = array())
+    private function getMaxSort(&$event, $item, array $replacement = array())
     {
         $em = $event->getEntityManager();
         $entityClass = get_class($item);
@@ -109,13 +108,13 @@ class SortListener
 
     /**
      * @param LifecycleEventArgs | PreUpdateEventArgs $event
-     * @param AbstractSort $item
+     * @param $item
      * @param array $replacement
      *
      * Every item, with a higher sort value than the moved / deleted item,
      * has the sort value reduced by 1 to close the gap
      */
-    private function updateItemsWithHigherSortNumber(&$event, AbstractSort &$item, $replacement = array())
+    private function updateItemsWithHigherSortNumber(&$event, &$item, $replacement = array())
     {
         $em = $event->getEntityManager();
         $entityClass = get_class($event->getEntity());
