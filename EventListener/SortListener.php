@@ -27,7 +27,9 @@ class SortListener
         $newSuperCategoryValues = array();
         $oldSuperCategoryValues = array();
 
-        foreach ($item->hasSuperCategory() as $superCategoryName => $superCategoryItem) {
+        $entity = $args->getEntity();
+
+        foreach ($entity->hasSuperCategory() as $superCategoryName => $superCategoryItem) {
             if ($args->hasChangedField($superCategoryName)) {
                 $superCategoryHasChanged = true;
 
@@ -55,13 +57,13 @@ class SortListener
         }
 
         // correct sort order of the item from the old supercategories
-        $this->updateItemsWithHigherSortNumber($args, $item, $oldSuperCategoryValues);
+        $this->updateItemsWithHigherSortNumber($args, $entity, $oldSuperCategoryValues);
 
         // get highest sort value of the items from the new supercategories
-        $maxSortRank = $this->getMaxSort($args, $item, $newSuperCategoryValues);
+        $maxSortRank = $this->getMaxSort($args, $entity, $newSuperCategoryValues);
 
         // set the sort value to the new highest sort of the new supercategories
-        $item->setSort($maxSortRank + 1);
+        $entity->setSort($maxSortRank + 1);
     }
 
     /**
