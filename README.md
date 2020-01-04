@@ -28,12 +28,12 @@ Then extend your Entity with BaseSort as shown as in the example below.
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Xepozz\SorterBundle\Model\BaseSort;
+use Xepozz\EntitySorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="test")
- * @ORM\EntityListeners({"Xepozz\SorterBundle\EventListener\SortListener"})
+ * @ORM\EntityListeners({"Xepozz\EntitySorterBundle\EventListener\SortListener"})
  */
 class Test extends BaseSort
 {
@@ -99,12 +99,12 @@ In the example below we have a product sub category that needs to be sorted with
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Xepozz\SorterBundle\Model\BaseSort;
+use Xepozz\EntitySorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="product_sub_category")
- * @ORM\EntityListeners({"Xepozz\SorterBundle\EventListener\SortListener"})
+ * @ORM\EntityListeners({"Xepozz\EntitySorterBundle\EventListener\SortListener"})
  */
 class ProductSubCategory extends BaseSort
 {

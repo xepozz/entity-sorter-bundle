@@ -1,14 +1,14 @@
 <?php
 
-namespace Xepozz\SorterBundle\Tests\EventListener;
+namespace Xepozz\EntitySorterBundle\Tests\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use PHPUnit\Framework\TestCase;
-use Xepozz\SorterBundle\EventListener\SortListener;
-use Xepozz\SorterBundle\Tests\Mock\AbstractSortMock;
+use Xepozz\EntitySorterBundle\EventListener\SortListener;
+use Xepozz\EntitySorterBundle\Tests\Mock\AbstractSortMock;
 
 class SortListenerTest extends TestCase
 {

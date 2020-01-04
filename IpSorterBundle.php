@@ -1,6 +1,6 @@
 <?php
 
-namespace Xepozz\SorterBundle;
+namespace Xepozz\EntitySorterBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

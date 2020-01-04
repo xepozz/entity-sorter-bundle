@@ -1,11 +1,11 @@
 <?php
 
-namespace Xepozz\SorterBundle\Utils;
+namespace Xepozz\EntitySorterBundle\Utils;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Xepozz\SorterBundle\Model\BaseSort;
+use Xepozz\EntitySorterBundle\Model\BaseSort;
 
 class EntitySorter
 {

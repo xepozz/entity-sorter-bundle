@@ -1,8 +1,8 @@
 <?php
 
-namespace Xepozz\SorterBundle\Tests\Mock;
+namespace Xepozz\EntitySorterBundle\Tests\Mock;
 
-use Xepozz\SorterBundle\Model\BaseSort;
+use Xepozz\EntitySorterBundle\Model\BaseSort;
 
 class AbstractSortMock extends BaseSort
 {

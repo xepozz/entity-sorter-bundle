@@ -1,6 +1,6 @@
 <?php
 
-namespace Xepozz\SorterBundle\EventListener;
+namespace Xepozz\EntitySorterBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Xepozz\SorterBundle\Model;
+namespace Xepozz\EntitySorterBundle\Model;
 
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
