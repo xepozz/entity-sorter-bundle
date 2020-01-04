@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Xepozz\SorterBundle\Model\BaseSort;
 
-class SimpleSorter
+class EntitySorter
 {
     const UP = 0;
     const DOWN = 1;
@@ -59,7 +59,7 @@ class SimpleSorter
         } elseif (self::DOWN) {
             $objectTwoOrder = $objectOne->getSort() + 1;
         } else {
-            throw new InvalidParameterException('Sort order has to be either simpleSorter::UP or simpleSorter::DOWN');
+            throw new InvalidParameterException('Sort order has to be either EntitySorter::UP or EntitySorter::DOWN');
         }
 
         $conditionArray = $objectOne->getSuperCategories();
