@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Xepozz\SorterBundle\Model;
 
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Xepozz\SorterBundle\Utils\SimpleSorter;
 
 /**
  * @MappedSuperclass
@@ -68,27 +66,5 @@ class BaseSort
     public function getSuperCategories()
     {
         return [];
-    }
-
-    /**
-     * @param Controller $controller
-     */
-    public function moveUp(Controller &$controller)
-    {
-        SimpleSorter::moveUp(
-            $controller,
-            $this
-        );
-    }
-
-    /**
-     * @param Controller $controller
-     */
-    public function moveDown(Controller &$controller)
-    {
-        SimpleSorter::moveUp(
-            $controller,
-            $this
-        );
     }
 }

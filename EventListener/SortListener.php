@@ -40,13 +40,11 @@ class SortListener
             $superCategories[$key] = $valueId;
         }
 
-        $otherItem = $em->getRepository($entityClass)
-            ->findOneBy(
-                $superCategories,
-                ["sort" => "DESC"]
-            );
+        $otherItem = $em
+            ->getRepository($entityClass)
+            ->findOneBy($superCategories, ['sort' => 'DESC']);
 
-        return (is_null($otherItem)) ? 0 : $otherItem->getSort();
+        return ($otherItem === null) ? 0 : $otherItem->getSort();
     }
 
     /**
@@ -68,18 +66,16 @@ class SortListener
                 $newSuperCategoryObject = $args->getNewValue($superCategoryName);
                 $oldSuperCategoryObject = $args->getOldValue($superCategoryName);
 
-                if (!is_null($newSuperCategoryObject)) {
+                if ($newSuperCategoryObject !== null) {
                     $newSuperCategoryValues[$superCategoryName] = $newSuperCategoryObject->getId();
                 }
 
-                if (!is_null($oldSuperCategoryObject)) {
+                if ($oldSuperCategoryObject !== null) {
                     $oldSuperCategoryValues[$superCategoryName] = $oldSuperCategoryObject->getId();
                 }
-            } else {
-                if (!is_null($superCategoryItem)) {
-                    $newSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
-                    $oldSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
-                }
+            } elseif ($superCategoryItem !== null) {
+                $newSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
+                $oldSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
             }
         }
 
@@ -123,11 +119,9 @@ class SortListener
             $superCategoryCondition .= "i.$key = $valueId AND ";
         }
 
-        $query = $em->createQuery(
-            "SELECT i 
-             FROM $entityClass i
-             WHERE $superCategoryCondition i.sort > :sort"
-        )->setParameter('sort', $sortRank);
+        $query = $em
+            ->createQuery("SELECT i FROM $entityClass i WHERE $superCategoryCondition i.sort > :sort")
+            ->setParameter('sort', $sortRank);
 
         $itemsWithHigherSortNumber = $query->getResult();
 
@@ -137,11 +131,9 @@ class SortListener
             /*
              * DQL is used here to avoid maximum function nesting error in XDebug
             */
-            $updateQuery = $em->createQuery(
-                "UPDATE $entityClass i 
-                 SET i.sort = :sort
-                 WHERE i.id = :id"
-            )->setParameter('sort', $newSort)
+            $updateQuery = $em
+                ->createQuery("UPDATE $entityClass i SET i.sort = :sort WHERE i.id = :id")
+                ->setParameter('sort', $newSort)
                 ->setParameter('id', $item->getId());
 
             $updateQuery->execute();

@@ -2,9 +2,9 @@
 
 namespace Xepozz\SorterBundle\Tests\Mock;
 
-use Xepozz\SorterBundle\Model\AbstractSort;
+use Xepozz\SorterBundle\Model\BaseSort;
 
-class AbstractSortMock extends AbstractSort
+class AbstractSortMock extends BaseSort
 {
     public $sort;
     public $superCategories = [];
