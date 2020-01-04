@@ -28,12 +28,12 @@ Then extend your Entity with BaseSort as shown as in the example below.
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Ip\SorterBundle\Model\BaseSort;
+use Xepozz\SorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="test")
- * @ORM\EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
+ * @ORM\EntityListeners({"Xepozz\SorterBundle\EventListener\SortListener"})
  */
 class Test extends BaseSort
 {
@@ -88,7 +88,7 @@ class testController extends Controller
 (Optional) Step 4: Sorting within a supercategory
 -------------------------
 
-If your entity is a subcategory of another entity and should be sorted only within its own supercategory, you need to overwrite the function ```hasSuperCategory()``` in your entity.
+If your entity is a subcategory of another entity and should be sorted only within its own supercategory, you need to overwrite the function ```getSuperCategories()``` in your entity.
 
 In the example below we have a product sub category that needs to be sorted within the product category.
 
@@ -99,12 +99,12 @@ In the example below we have a product sub category that needs to be sorted with
 // ...
 
 use Doctrine\ORM\Mapping as ORM;
-use Ip\SorterBundle\Model\BaseSort;
+use Xepozz\SorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="product_sub_category")
- * @ORM\EntityListeners({"Ip\SorterBundle\EventListener\SortListener"})
+ * @ORM\EntityListeners({"Xepozz\SorterBundle\EventListener\SortListener"})
  */
 class ProductSubCategory extends BaseSort
 {
@@ -121,14 +121,14 @@ class ProductSubCategory extends BaseSort
     /**
      * @return array
      */
-    public function hasSuperCategory()
+    public function getSuperCategories()
     {
         return array('productCategory' => $this->getProductCategory());
     }
 }
 ```
 
-An entity can have several supercategories. The array returned in hasSuperCategory just has to contain the values from them. The order of the supercategories has no influence on the sorting:
+An entity can have several supercategories. The array returned in getSuperCategories just has to contain the values from them. The order of the supercategories has no influence on the sorting:
 
 ```php
 return array(

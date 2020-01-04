@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Ip\SorterBundle\Model;
+namespace Xepozz\SorterBundle\Model;
+
 use Doctrine\ORM\Mapping\MappedSuperclass;
-use Ip\SorterBundle\Utils\simpleSorter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Xepozz\SorterBundle\Utils\SimpleSorter;
 
 /**
  * @MappedSuperclass
@@ -26,7 +27,8 @@ class BaseSort
     /**
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -34,7 +36,8 @@ class BaseSort
      * @param integer $id
      * @return $this
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
 
         return $this;
@@ -48,12 +51,12 @@ class BaseSort
         return $this->sort;
     }
 
-
     /**
      * @param integer $sort
      * @return $this
      */
-    public function setSort($sort) {
+    public function setSort($sort)
+    {
         $this->sort = $sort;
 
         return $this;
@@ -62,9 +65,9 @@ class BaseSort
     /**
      * @return array
      */
-    public function hasSuperCategory()
+    public function getSuperCategories()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -72,7 +75,7 @@ class BaseSort
      */
     public function moveUp(Controller &$controller)
     {
-        simpleSorter::moveUp(
+        SimpleSorter::moveUp(
             $controller,
             $this
         );
@@ -83,7 +86,7 @@ class BaseSort
      */
     public function moveDown(Controller &$controller)
     {
-        simpleSorter::moveUp(
+        SimpleSorter::moveUp(
             $controller,
             $this
         );

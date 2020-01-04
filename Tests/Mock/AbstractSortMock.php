@@ -1,13 +1,13 @@
 <?php
 
-namespace Ip\SorterBundle\Tests\Mock;
+namespace Xepozz\SorterBundle\Tests\Mock;
 
-use Ip\SorterBundle\Model\AbstractSort;
+use Xepozz\SorterBundle\Model\AbstractSort;
 
 class AbstractSortMock extends AbstractSort
 {
     public $sort;
-    public $superCategories = array();
+    public $superCategories = [];
 
     /**
      * @return integer
@@ -36,7 +36,7 @@ class AbstractSortMock extends AbstractSort
     /**
      * @return array
      */
-    public function hasSuperCategory() 
+    public function getSuperCategories()
     {
         return $this->superCategories;
     }

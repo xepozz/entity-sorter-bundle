@@ -1,6 +1,6 @@
 <?php
 
-namespace Ip\SorterBundle\EventListener;
+namespace Xepozz\SorterBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -18,18 +18,50 @@ class SortListener
     }
 
     /**
+     * @param LifecycleEventArgs|PreUpdateEventArgs $event
+     * @param $item
+     * @param array $replacement
+     * @return int
+     */
+    private function getMaxSort(&$event, $item, array $replacement = [])
+    {
+        $em = $event->getEntityManager();
+        $entityClass = get_class($item);
+
+        $superCategories = [];
+
+        foreach ($item->getSuperCategories() as $key => $value) {
+            if (array_key_exists($key, $replacement)) {
+                $valueId = $replacement[$key];
+            } else {
+                $valueId = $value->getId();
+            }
+
+            $superCategories[$key] = $valueId;
+        }
+
+        $otherItem = $em->getRepository($entityClass)
+            ->findOneBy(
+                $superCategories,
+                ["sort" => "DESC"]
+            );
+
+        return (is_null($otherItem)) ? 0 : $otherItem->getSort();
+    }
+
+    /**
      * @param $item
      * @param PreUpdateEventArgs $args
      */
     public function preUpdate($item, PreUpdateEventArgs $args)
     {
         $superCategoryHasChanged = false;
-        $newSuperCategoryValues = array();
-        $oldSuperCategoryValues = array();
+        $newSuperCategoryValues = [];
+        $oldSuperCategoryValues = [];
 
         $entity = $args->getEntity();
 
-        foreach ($entity->hasSuperCategory() as $superCategoryName => $superCategoryItem) {
+        foreach ($entity->getSuperCategories() as $superCategoryName => $superCategoryItem) {
             if ($args->hasChangedField($superCategoryName)) {
                 $superCategoryHasChanged = true;
 
@@ -43,8 +75,7 @@ class SortListener
                 if (!is_null($oldSuperCategoryObject)) {
                     $oldSuperCategoryValues[$superCategoryName] = $oldSuperCategoryObject->getId();
                 }
-            }
-            else {
+            } else {
                 if (!is_null($superCategoryItem)) {
                     $newSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
                     $oldSuperCategoryValues[$superCategoryName] = $superCategoryItem->getId();
@@ -67,56 +98,13 @@ class SortListener
     }
 
     /**
-     * @param $item
-     * @param LifecycleEventArgs $event
-     */
-    public function preRemove($item, LifecycleEventArgs $event)
-    {
-        $this->updateItemsWithHigherSortNumber($event, $item);
-    }
-
-    /**
-     * @param LifecycleEventArgs | PreUpdateEventArgs $event
+     * @param LifecycleEventArgs|PreUpdateEventArgs $event
      * @param $item
      * @param array $replacement
-     * @return int
-     */
-    private function getMaxSort(&$event, $item, array $replacement = array())
-    {
-        $em = $event->getEntityManager();
-        $entityClass = get_class($item);
-
-        $superCategories = array();
-
-        foreach ($item->hasSuperCategory() as $key => $value) {
-            if (array_key_exists($key, $replacement)) {
-                $valueId = $replacement[$key];
-            }
-            else {
-                $valueId = $value->getId();
-            }
-
-            $superCategories[$key] = $valueId;
-        }
-
-        $otherItem = $em->getRepository($entityClass)
-            ->findOneBy(
-                $superCategories,
-                ["sort" => "DESC"]
-            );
-
-        return (is_null($otherItem)) ? 0 : $otherItem->getSort();
-    }
-
-    /**
-     * @param LifecycleEventArgs | PreUpdateEventArgs $event
-     * @param $item
-     * @param array $replacement
-     *
      * Every item, with a higher sort value than the moved / deleted item,
      * has the sort value reduced by 1 to close the gap
      */
-    private function updateItemsWithHigherSortNumber(&$event, &$item, $replacement = array())
+    private function updateItemsWithHigherSortNumber(&$event, &$item, $replacement = [])
     {
         $em = $event->getEntityManager();
         $entityClass = get_class($event->getEntity());
@@ -125,11 +113,10 @@ class SortListener
 
         $superCategoryCondition = '';
 
-        foreach ($item->hasSuperCategory() as $key => $value) {
+        foreach ($item->getSuperCategories() as $key => $value) {
             if (array_key_exists($key, $replacement)) {
                 $valueId = $replacement[$key];
-            }
-            else {
+            } else {
                 $valueId = $value->getId();
             }
 
@@ -159,5 +146,14 @@ class SortListener
 
             $updateQuery->execute();
         }
+    }
+
+    /**
+     * @param $item
+     * @param LifecycleEventArgs $event
+     */
+    public function preRemove($item, LifecycleEventArgs $event)
+    {
+        $this->updateItemsWithHigherSortNumber($event, $item);
     }
 }

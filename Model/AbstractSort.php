@@ -1,15 +1,16 @@
 <?php
 
-namespace Ip\SorterBundle\Model;
+namespace Xepozz\SorterBundle\Model;
 
 trigger_error('AbstractSort will be removed in the next major version, use BaseSort instead', E_USER_DEPRECATED);
 
-use Ip\SorterBundle\Utils\simpleSorter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Xepozz\SorterBundle\Utils\SimpleSorter;
 
 /**
  * Class AbstractSort
- * @package Ip\SorterBundle\Model
+ *
+ * @package Xepozz\SorterBundle\Model
  * @deprecated
  */
 abstract class AbstractSort
@@ -32,9 +33,9 @@ abstract class AbstractSort
     /**
      * @return array
      */
-    public function hasSuperCategory()
+    public function getSuperCategories()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -42,7 +43,7 @@ abstract class AbstractSort
      */
     public function moveUp(Controller &$controller)
     {
-        simpleSorter::moveUp(
+        SimpleSorter::moveUp(
             $controller,
             $this
         );
@@ -53,7 +54,7 @@ abstract class AbstractSort
      */
     public function moveDown(Controller &$controller)
     {
-        simpleSorter::moveUp(
+        SimpleSorter::moveUp(
             $controller,
             $this
         );

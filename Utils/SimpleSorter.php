@@ -1,20 +1,20 @@
 <?php
 
-namespace Ip\SorterBundle\Utils;
+namespace Xepozz\SorterBundle\Utils;
 
-use Ip\SorterBundle\Model\AbstractSort;
-use Ip\SorterBundle\Model\BaseSort;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Xepozz\SorterBundle\Model\AbstractSort;
+use Xepozz\SorterBundle\Model\BaseSort;
 
-class simpleSorter
+class SimpleSorter
 {
     const UP = 0;
     const DOWN = 1;
 
     /**
-     * @param Controller   $controller
-     * @param BaseSort | AbstractSort $objectOne
+     * @param Controller $controller
+     * @param BaseSort|AbstractSort $objectOne
      * @return bool
      */
     public static function moveUp(Controller &$controller, $objectOne)
@@ -23,19 +23,9 @@ class simpleSorter
     }
 
     /**
-     * @param Controller   $controller
-     * @param BaseSort | AbstractSort $objectOne
-     * @return bool
-     */
-    public static function moveDown(Controller &$controller, $objectOne)
-    {
-        return self::move($controller, $objectOne, self::DOWN);
-    }
-
-    /**
-     * @param Controller   $controller
-     * @param BaseSort | AbstractSort $objectOne
-     * @param int          $order
+     * @param Controller $controller
+     * @param BaseSort|AbstractSort $objectOne
+     * @param int $order
      * @return bool
      */
     private static function move(Controller &$controller, $objectOne, $order)
@@ -49,15 +39,13 @@ class simpleSorter
 
         if ($order == self::UP) {
             $objectTwoOrder = $objectOne->getSort() - 1;
-        }
-        elseif (self::DOWN) {
+        } elseif (self::DOWN) {
             $objectTwoOrder = $objectOne->getSort() + 1;
-        }
-        else {
+        } else {
             throw new InvalidParameterException('Sort order has to be either simpleSorter::UP or simpleSorter::DOWN');
         }
 
-        $conditionArray = $objectOne->hasSuperCategory();
+        $conditionArray = $objectOne->getSuperCategories();
         $conditionArray['sort'] = $objectTwoOrder;
 
         $objectTwo = $em->getRepository($fullClassName)
@@ -79,5 +67,15 @@ class simpleSorter
         $em->flush();
 
         return true;
+    }
+
+    /**
+     * @param Controller $controller
+     * @param BaseSort|AbstractSort $objectOne
+     * @return bool
+     */
+    public static function moveDown(Controller &$controller, $objectOne)
+    {
+        return self::move($controller, $objectOne, self::DOWN);
     }
 }

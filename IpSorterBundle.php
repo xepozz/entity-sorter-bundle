@@ -1,6 +1,6 @@
 <?php
 
-namespace Ip\SorterBundle;
+namespace Xepozz\SorterBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
