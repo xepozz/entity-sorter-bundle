@@ -1,5 +1,5 @@
 {
-  "name": "xepozz/sorter-bundle",
+  "name": "xepozz/entity-sorter-bundle",
   "description": "Adds sorting functionality to entities",
   "keywords": [
     "sort",
@@ -16,7 +16,7 @@
     ]
   },
   "require": {
-    "php": ">=5.4",
+    "php": ">=5.6",
     "symfony/framework-bundle": "^4.4|~5.0",
     "doctrine/orm": "^2.4"
   },
