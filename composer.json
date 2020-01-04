@@ -12,7 +12,7 @@
   "license": "MIT",
   "archive": {
     "exclude": [
-      "/Tests"
+      "/"
     ]
   },
   "require": {
@@ -22,7 +22,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Xepozz\\EntitySorterBundle\\": ""
+      "Xepozz\\EntitySorterBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Xepozz\\EntitySorterBundle\\Tests\\": "tests/"
     }
   },
   "require-dev": {
