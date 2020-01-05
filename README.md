@@ -8,7 +8,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```console
-$ composer require ip/sorter-bundle
+$ composer require xepozz/entity-sorter-bundle
 ```
 
 This command requires you to have Composer installed globally, as explained
@@ -23,21 +23,22 @@ Then extend your Entity with BaseSort as shown as in the example below.
 
 ```php
 <?php
-// AppBundle/Entity/Test.php
-
-// ...
+// AppBundle/Entity/OrderListItem.php
 
 use Doctrine\ORM\Mapping as ORM;
-use Xepozz\EntitySorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="test")
+ * @ORM\Table(name="order_list_item")
  * @ORM\EntityListeners({"Xepozz\EntitySorterBundle\EventListener\SortListener"})
  */
-class Test extends BaseSort
+class OrderListItem
 {
-    // ...
+    public function getId(){ /**/ }
+    public function setId(){ /**/ }
+    public function getSort(){ /**/ }
+    public function setSort(){ /**/ }
+    public function getSuperCategories(){ /**/ }
 }
 ```
 
@@ -52,36 +53,31 @@ To move your items up or down in the sort order use the entity functions ```move
 <?php
 // AppBundle/Controller/testController.php
 
-// ...
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Xepozz\EntitySorterBundle\Utils\EntitySorter;
 
-// ...
-
-class testController extends Controller
+class TestController extends Controller
 {
-    
-    // ...
-    
-    public function moveUpAction($id)
-    {
-        // ...
-        
-        $testEntity->moveUp($this);
+    private $entitySorter;
 
-        // ...
+    public function __construct(EntitySorter $entitySorter) 
+    {
+        $this->entitySorter = $entitySorter;
     }
     
-    public function moveDownAction($id)
+    public function moveUpAction(OrderListItem $entity)
     {
-        // ...
-        
-        $testEntity->moveDown($this);
+        $this->entitySorter->moveUp($entity);
 
-        // ...
+        return $this->redirect('...');
     }
+    
+    public function moveDownAction(OrderListItem $entity)
+    {
+        $this->entitySorter->moveDown($entity);
 
-    // ...
+        return $this->redirect('...');
+    }
 }
 ```
 
@@ -96,10 +92,7 @@ In the example below we have a product sub category that needs to be sorted with
 <?php
 // AppBundle/Entity/ProductSubCategory.php
 
-// ...
-
-use Doctrine\ORM\Mapping as ORM;
-use Xepozz\EntitySorterBundle\Model\BaseSort;
+use Doctrine\ORM\Mapping as ORM;use Xepozz\EntitySorterBundle\Model\BaseSort;
 
 /**
  * @ORM\Entity
@@ -108,31 +101,27 @@ use Xepozz\EntitySorterBundle\Model\BaseSort;
  */
 class ProductSubCategory extends BaseSort
 {
-    // ...
-    
     /**
      * @ORM\ManyToOne(targetEntity="ProductCategory", inversedBy="productSubCategories")
      * @ORM\JoinColumn(name="product_category_id", referencedColumnName="id")
      */
     protected $productCategory;
-    
-    // ...
-    
+
     /**
      * @return array
      */
     public function getSuperCategories()
     {
-        return array('productCategory' => $this->getProductCategory());
+        return ['productCategory' => $this->getProductCategory()];
     }
 }
 ```
 
-An entity can have several supercategories. The array returned in getSuperCategories just has to contain the values from them. The order of the supercategories has no influence on the sorting:
+An entity can have several supercategories. The array returned in `getSuperCategories` just has to contain the values from them. The order of the supercategories has no influence on the sorting:
 
 ```php
-return array(
+return [
     'productCategory' => $this->getProductCategory(),
     'anotherSuperCategory' => $this->getAnotherSuperCategory()
-);
+];
 ```
